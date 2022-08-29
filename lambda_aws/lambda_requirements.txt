@@ -1,0 +1,9 @@
+tensorflow>=2.8
+#tensorflow-io>=0.26.0
+opencv-python-headless
+tensorflow-hub>=0.12
+requests>=2.25.0
+botocore~=1.27.7  # Seems to be an error to call s3fs
+s3fs  #==2022.3.0
+#aiobotocore  #~=2.2.0
+#boto3
