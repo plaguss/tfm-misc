@@ -104,12 +104,42 @@ En el siguiente apartado se presenta la aplicación para clasificar movimientos 
 
 \subsection{Introducción}
 
-texto
+De cara a explotar el modelo, un usuario solo necesita de un lugar en el cuál subir un mp4 con un movimiento, y recibir a cambio la predicción del mismo. A continuación se presenta la arquitectura propuesta para la explotación del modelo. 
 
-\subsection{Arquitectura cloud (diagrama)}
+\subsection{Arquitectura cloud}
 
-texto
+A continuación se puede ver en la figura \ref{cloud_diagram} el diagrama de la aplicación desplegada en AWS.
+
+El punto de entrada para un usuario es la aplicación desplegada en \href{https://aws.amazon.com/es/ec2/}{\textit{EC2}}, cuyo código se puede ver en el repositorio \href{https://github.com/plaguss/movinets_dash_app}{\texttt{movinets\_dash\_app}}.
+
+La app está desarrollada en \href{https://plotly.com/dash/}{\textit{Dash}}, y ofrece la funcionalidad justa para subir un video en formato mp4 (y mostrarlo), obtener las probabilidades asociadas a cada movimiento, y mostrar ejemplos de los movimientos para los que se ha entrenado el modelo.
+
+Se pueden distinguir dos bloques:
+
+\begin{itemize}
+
+  \item \textit{App pipeline}
+
+Por un lado tenemos la aplicación con la que interactúa el usuario.
+Se parte de un repositorio público en github que contiene el código del front end. Por medio de \href{https://aws.amazon.com/es/codepipeline/}{AWS CodePipeline} y \href{https://aws.amazon.com/es/codedeploy/}{AWS CodeDeploy} se automatiza el despliegue de la misma en una instancia de \textit{EC2}, que viene desencadenado por medio de un \texttt{git push} a la rama master del repositorio.
+
+  \item \textit{Model predictions}
+
+Al subir un video, este se puede mandar a predecir (solo se reproduce en pantalla por defecto). El proceso en este caso contempla la interacción con el modelo por medio de una función \href{https://aws.amazon.com/es/lambda/}{\textit{AWS Lambda}}. Debido a que TENSORFLOW.
+
+
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+		\includegraphics[height=10cm, width=12cm]{figs/cloud_diagram.png}
+\caption{Diagrama Cloud}\label{cloud_diagram}
+
+he
+
+\end{figure}
 
 \subsection{Resultado y funcionamiento (alguna imagen)}
 
-texto
+- Capturas de la app desplegada, partes que la componen.
