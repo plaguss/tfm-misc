@@ -1,15 +1,32 @@
 \chapter{Estado del arte}
 
-texto
-
 \section{Deep Learning}
 
-texto
+El campo del reconocimiento de acciones se ha vuelto un área de investigación activa en los últimos años (ver \href{https://paperswithcode.com/task/action-recognition-in-videos}{\textit{Action Recognition}}). Si bien las acciones humanas se pueden reconocer de diferentes formas, como el \textit{optical flow} o en representaciones de esqueletos, en este trabajo nos centramos en la clasificación de videos. La clasificación de vídeos consiste en la obtención de una etiqueta representativa del contenido del vídeo, dados los frames que lo componen (ver referencia \href{Video Classification is the task of producing a label that is relevant to the video given its frames}{\textit{Video Classification}}).
+
+Con la introducción del dataset \textit{Kinetics 400} (ver \cite{Kinetics400}) se plantea el primer punto de referencia para la clasificación de acciones en humanos. Debido al tamaño del conjunto de datos, se hace posible entrenar redes neuronales desde cero y permite probar distintas arquitecturas sobre el mismo que posteriormente se pueden ajustar a tareas más a la medida por medio de \textit{fine-tuning} (ver \cite{I3D}).
+
+En el momento de plantearse este trabajo, aparece \textit{MoViNets}, una familia de modelos eficientes tanto en el uso de memoria como en computación, que permite operar con videos en \textit{streaming}, logrando  \textit{accuracies} más elevados en comparación con otros modelos desarro-llados en la literatura con sus versiones más complejas (ver \cite{MoViNets})\footnote{Actualmente el panorama de modelos entrenados sobre Kinetics 600 ha evolucionado mucho, como puede verse en \href{https://paperswithcode.com/sota/action-classification-on-kinetics-600}{Action Classification on Kinetics-600}, incluso añadiendo componentes de audio y texto (subtítulos): \cite{Merlot}.}, que ofrecen buenos resultados sobre \textit{Kinetics 600}, una mejora sobre \textit{Kinetics 600}: \cite{Kinetics600}.
+
+Esta familia de modelos se compone de dos versiones diferentes, que en el paper original llaman \textit{base} y \textit{stream}, con 5 "niveles" de complejidad (desde a0 hasta a5, donde a0 es una arquitectura simplificada, y a5-base obtiene resultados al nivel de \cite{X3D} (ver Tabla 17 en y Tabla 22 respectivamente en \textit{MoViNets}). La gran novedad que aporta este trabajo es la variante \textit{stream}, que permite tratar videos de gran longitud sin tener que tratarlo por todos los frames por completo antes de devolver una predicción, con lo que se hace posible la inferencia en videos de gran longitud y con dispositivos de menor capacidad (ver \href{https://blog.tensorflow.org/2022/04/video-classification-on-edge-devices.html}{aquí}).
+
+ver \cite{UCF101}
+
 
 \section{Cloud}
 
 texto
 
 \section{Trabajos relacionados}
+
+Meter referencias a artículos y blogs:
+
+Ejemplo tenis:
+
+https://blog.ml6.eu/sports-video-analysis-in-the-real-world-realtime-tennis-action-recognition-using-movinet-stream-813200aa589f
+
+Medium ejemplo de contar repeticiones:
+
+https://towardsdatascience.com/how-i-created-the-workout-movement-counting-app-using-deep-learning-and-optical-flow-89f9d2e087ac
 
 texto

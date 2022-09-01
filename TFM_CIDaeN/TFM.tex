@@ -47,7 +47,7 @@
 %\listofalgorithms   % Índice de algoritmos (comentar si no los hay)
 %\listofcodes	    % Índice de códigos (comentar si no los hay)
 %\cleardoublepage
-\clearpage
+%\clearpage
 
 % -------------------------------
 % Documento
@@ -55,20 +55,6 @@
 \mainmatter
 % Estilo de página
 \pagestyle{fancy}
-
-%% Versión original
-%% Obtención de datos
-%\input{chapters/ch_data} 
-
-%% Introducción
-%\input{chapters/ch1} 
-
-%% Algunos elementos
-%\input{chapters/ch2} 
-
-%% Utilidades para anotaciones
-%\input{chapters/ch3} 
-
 
 % Introducción
 \input{chapters/intro} 
@@ -87,19 +73,21 @@
 % Apéndices
 % -------------------------------
 \appendix
-\chapter{Anexo 1}
-\lipsum[1-2]
+\input{chapters/anexo}
+
+%\chapter{Anexo 1}
+%\lipsum[1-2]
 
 %\cleardoublepage
-\clearpage
-\thispagestyle{empty}
+%\clearpage
+%\thispagestyle{empty}
 
 
 % -------------------------------
 % Bibliografía
 % -------------------------------
 \bibliographystyle{apalike}
-\bibliography{bib/TFM} 
+\bibliography{TFM} 
 \addcontentsline{toc}{chapter}{Referencia bibliográfica} % Añade a la tabla de contenidos
 
 \end{document}
