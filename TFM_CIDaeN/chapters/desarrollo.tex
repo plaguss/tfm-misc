@@ -1,19 +1,27 @@
 \chapter{Desarrollo del proyecto}
 
-\section{Extracción y recoleccion de datos}
+\section{Extracción y recoleccion de datos}\label{extracción_recolección}
 
 \subsection{Introducción}
 
-En el siguiente apartado se expone la metodología de obtención de los datos de entrena-miento.
+En el siguiente apartado se expone la metodología de obtención de los datos de entrena-miento. Se presenta el proceso de extracción de los videos, el tratamiento para la generación del conjunto de clips, y el análisis de los datos obtenidos.
 
-Las distintas versiones de MoViNets están entrenadas sobre \href{https://www.deepmind.com/open-source/kinetics}{Kinetics 600}, por lo que para reentrenar el modelo necesitamos \textit{clips} (videos) que representen los movimientos que se quieren predecir.
+No hay constancia de un dataset formado por clips de movimientos de CrossFit etiquetados o modelo que permita clasificar estos movimientos, por lo que el paso inicial en este trabajo consiste en obtener un conjunto de \textit{clips} que con los movimientos etiquetados.
 
-Si bien no existe un conjunto de datos similar aplicado específicamente a movimientos de crossfit, muchos atletas suben videos a youtube de realizando distintas pruebas y ejercicios. Partiendo de estos videos, se pueden extraer los distintos \textit{clips} (trozos) que representen los movimientos con los que reentrenar el modelo.
+Una particularidad de este deporte, es que gran parte del contenido está disponible en \textit{YouTube}, por lo que es el primer punto al que acceder en busca de estos datos. Debido a que hay una gran diversidad de movimientos en CrossFit, y si en competiciones como los \textit{CrossFit Games} aparecen cada año uno o varios movimientos nuevos, se ha decidido seleccionar un subconjunto de los movimientos para crear este dataset.
 
-Todos los videos descargados pertenecen a la primera etapa de los \href{https://en.wikipedia.org/wiki/2020_CrossFit_Games}{Crossfit Games de 2020}). Este año fue algo atípico debido a la pandemia: La final de la competición se distinguió en dos etapas, una primera en formato online, y la final a la que solo pudieron acceder 10 atletas en total (5 hombres y 5 mujeres). Los videos correspondientes a la primera etapa están todos subidos a YouTube, dentro de las \href{https://www.youtube.com/c/CrossFitGamesTV/playlists}{listas de CrossFit Games}, donde todos los atletas están grabados de forma individual y con la cámara estática, lo que reduce enormemente el ruido de los datos.
+Los CrossFit Games son una competición anual creada por \textit{Crossfit, LLC.} que busca descubrir a los atletas más en forma, y consisten en una serie de eventos (\textit{workouts}) basados en ejercicios metabólicos, halterofilia y gimnásticos. Los ganadores de los CrossFit Games obtienen el título de "Fittest on Earth" (ver la siguiente entrada de  \href{https://es.wikipedia.org/wiki/CrossFit_Games}{wikipedia}).
+
+En 2020, debido a la pandemia por COVID-19, esta competición se vió afectada, y 30 hombres y 30 mujeres fueron invitados a competir de forma online durante una primera etapa, pasando solo 5 y 5 a la final.
+
+Los atletas grabaron la realización de los eventos, que eran enviados a \textit{CrossFit} para su corrección, y estos los han publicado en \textit{YouTube}.
 
 
 \subsection{Proceso de extracción}
+
+SEGUIR AQUÍ CON LOS VIDEOS
+
+Todos los videos descargados pertenecen a la primera etapa de los \href{https://en.wikipedia.org/wiki/2020_CrossFit_Games}{Crossfit Games de 2020}). Este año fue algo atípico debido a la pandemia: La final de la competición se distinguió en dos etapas, una primera en formato online, y la final a la que solo pudieron acceder 10 atletas en total (5 hombres y 5 mujeres). Los videos correspondientes a la primera etapa están todos subidos a YouTube, dentro de las \href{https://www.youtube.com/c/CrossFitGamesTV/playlists}{listas de CrossFit Games}, donde todos los atletas están grabados de forma individual y con la cámara estática, lo que reduce enormemente el ruido de los datos.
 
 Para seleccionar la muestra de videos, se ha partido de 4 \textit{eventos} \footnote{Los videos corresponden a los siguientes eventos, que se pueden encontrar \href{https://games.crossfit.com/workouts/games/2020}{aquí}: \textit{Friendly Fran}, \textit{Damn Diane}, \textit{Nasty Nancy} y \textit{Awful Annie}.} que en total dan pie a 9 movimientos (ver las etiquetas en el siguiente \href{https://gist.github.com/plaguss/58091caefee6acb39ae51cbc241b3cf9/raw/labels.txt}{\textit{gist}}).
 
@@ -41,7 +49,13 @@ Meter tablas resumen de frames y segundos de los vídeos.
 \input{tables/descriptive_stats}
 
 
-\section{Experimentación con deep learning}
+METER REFERENCIA A DATASET DEL PAPER: \cite{UCF101} Y EXPLICAR.
+
+HABLAR DE ESTO:
+Las distintas versiones de MoViNets están entrenadas sobre \href{https://www.deepmind.com/open-source/kinetics}{Kinetics 600}, por lo que para reentrenar el modelo necesitamos \textit{clips} (videos) que representen los movimientos que se quieren predecir.
+
+
+\section{Experimentación con deep learning}\label{deep_learning}
 
 \subsection{Introducción}
 
@@ -72,7 +86,7 @@ En la siguiente imagen podemos ver el ejemplo de uno de los \textit{clips} que e
 
 \subsection{Experimentos realizados y resultados}
 
-El modelo se ha entrenado en \href{https://colab.research.google.com/?hl=es}{\textit{Google Colab}} con \textit{Tensorflow 2}. El modelo seleccionado ha sido MoViNets A2 Base\footnote{No ha sido posible hacer fine-tuning del modelo Stream debido a un error en los modelos guardados, ver \href{https://github.com/tensorflow/models/issues/10730}{issue 10730}.}, ya aunque sea necesario utilizar GPU para el fine-tuning, es el modelo más grande (y con mejor capacidad predictiva) que permite hacer inferencia con CPU en un tiempo razonable (BUSCAR REFERENCIA DE LOS AUTORES).
+El modelo se ha entrenado en \href{https://colab.research.google.com/?hl=es}{\textit{Google Colab}} con \textit{Tensorflow 2}. El modelo seleccionado ha sido MoViNets A2 Base\footnote{No ha sido posible hacer fine-tuning del modelo Stream debido a un error en los modelos guardados, ver \href{https://github.com/tensorflow/models/issues/10730}{issue 10730}.}, ya aunque sea necesario utilizar GPU para el fine-tuning, es el modelo más grande (y con mejor capacidad predictiva) que permite hacer inferencia con CPU en un tiempo razonable\footnote{En \href{https://blog.tensorflow.org/2022/04/video-classification-on-edge-devices.html}{este artículo} de \textit{Tensorflow} hacen referencia a aquellos modelos que pueden llegar a correr en tiempo real, lo que consideran como 20fps o superior.}.
 
 Los hiperparámetros del modelo son los mismos utilizados en el paper original\footnote{Ver apartado \textit{B.1 More Details of the Architectures and Training} de METER BIBLIOGRAFÍA PARA EL PAPER}, con un tamaño de batch igual a 8\footnote{El tamaño del batch seleccionado es el mismo utilizado por los autores en el tutorial a modo de ejemplo sobre el dataset UCF101.}.
 
@@ -126,11 +140,11 @@ Por último, se puede ver en la siguiente tabla las probabilidades medias y desv
 
 \input{tables/probabilities}
 
-\section{Cloud y despliegue de la aplicación}
-
-En el siguiente apartado se presenta la aplicación para clasificar movimientos de crossfit, la arquitectura elegida así como su funcionamiento para un ejemplo en concreto.
+\section{Cloud y despliegue de la aplicación}\label{despliegue}
 
 \subsection{Introducción}
+
+En el siguiente apartado se presenta la aplicación para clasificar movimientos de crossfit, la arquitectura elegida, así como su funcionamiento para un ejemplo en concreto.
 
 Para la explotación del modelo se ha elegido desplegar una aplicación en AWS desarrollada en Plotly Dash. Un usuario solo necesita subir un video en formato mp4, y recibir a cambio las predicciones del mismo. En los siguientes apartados se puede ver la arquitectura de la aplicación en la nube y los resultados obtenidos.
 

@@ -1,4 +1,4 @@
-\chapter{Estado del arte}
+\chapter{Estado del arte}\label{estado_del_arte}
 
 \section{Deep Learning}
 
@@ -8,25 +8,30 @@ Con la introducción del dataset \textit{Kinetics 400} (ver \cite{Kinetics400}) 
 
 En el momento de plantearse este trabajo, aparece \textit{MoViNets}, una familia de modelos eficientes tanto en el uso de memoria como en computación, que permite operar con videos en \textit{streaming}, logrando  \textit{accuracies} más elevados en comparación con otros modelos desarro-llados en la literatura con sus versiones más complejas (ver \cite{MoViNets})\footnote{Actualmente el panorama de modelos entrenados sobre Kinetics 600 ha evolucionado mucho, como puede verse en \href{https://paperswithcode.com/sota/action-classification-on-kinetics-600}{Action Classification on Kinetics-600}, incluso añadiendo componentes de audio y texto (subtítulos): \cite{Merlot}.}, que ofrecen buenos resultados sobre \textit{Kinetics 600}, una mejora sobre \textit{Kinetics 600}: \cite{Kinetics600}.
 
-Esta familia de modelos se compone de dos versiones diferentes, que en el paper original llaman \textit{base} y \textit{stream}, con 5 "niveles" de complejidad (desde a0 hasta a5, donde a0 es una arquitectura simplificada, y a5-base obtiene resultados al nivel de \cite{X3D} (ver Tabla 17 en y Tabla 22 respectivamente en \textit{MoViNets}). La gran novedad que aporta este trabajo es la variante \textit{stream}, que permite tratar videos de gran longitud sin tener que tratarlo por todos los frames por completo antes de devolver una predicción, con lo que se hace posible la inferencia en videos de gran longitud y con dispositivos de menor capacidad (ver \href{https://blog.tensorflow.org/2022/04/video-classification-on-edge-devices.html}{aquí}).
+Esta familia de modelos se compone de dos versiones diferentes, que en el paper original llaman \textit{base} y \textit{stream}, con 5 "niveles" de complejidad (desde a0 hasta a5, donde a0 es una arquitectura simplificada, y a5-base obtiene resultados al nivel de \cite{X3D} (ver Tabla 17 en y Tabla 22 respectivamente en \cite{MoViNets}). La gran novedad que aporta este trabajo es la variante \textit{stream}, que permite tratar videos de gran longitud sin tener que procesar todos los frames por completo antes de devolver una predicción, con lo que se hace posible la inferencia en videos de gran longitud y con dispositivos de menor capacidad (ver \href{https://blog.tensorflow.org/2022/04/video-classification-on-edge-devices.html}{aquí}).
 
-ver \cite{UCF101}
+Los autores de \textit{MoViNets} ofrecen el siguiente \href{https://colab.research.google.com/github/tensorflow/models/blob/master/official/projects/movinet/movinet_tutorial.ipynb}{\textit{colab notebook}} en el que muestran ejemplos de como hacer inferencia tanto con los modelos \textit{base} como \textit{stream}, exportar el modelo a \textit{Tensorflow Lite} para hacer predicción en dispositivos móviles, y como hacer \textit{fine-tuning}, utilizando para ello el modelo \textit{MoViNet-A0-Base}. Como se puede ver en el mismo ejemplo, tras solo 3 \textit{epochs}, haciendo fine tuning sobre el dataset \href{https://www.tensorflow.org/datasets/catalog/ucf101}{UCF101} consiguen un top 1 accuracy de $0.9329$ y $0.8514$ en training y validación respectivamente, por lo que parece un buen punto de partida para aplicar al conjunto de datos presente.
+
+En cuanto a las arquitecturas de \textit{MoViNets stream}, si bien a la hora de hacer inferencia todo funciona correctamente, y el procedimiento para hacer autores debería ser análogo, no he visto posibilidad de reproducir el entrenamiento. En el siguiente \href{https://github.com/tensorflow/models/issues/10730}{issue 10730} se puede ver los errores. Este comportamiento parece relacionado con los siguientes issues \href{https://github.com/tensorflow/models/issues/10463#issuecomment-1019395406_}{10463} y \href{https://github.com/tensorflow/models/issues/10515}{10515}, y actualmente se encuentran o bien abiertos esperando respuesta, o se han cerrado sin respuesta. Debido a esto, se ha optado por centrarse en la arquitectura de los modelos \textit{base}.
 
 
 \section{Cloud}
 
-texto
+De que hablo aquí¿
+
+Si pensamos en servir un modelo de ML/AI, en la nube \href{https://aws.amazon.com/sagemaker/?nc1=h_ls}{\textit{Amazon SageMaker}} ofrece el ciclo de vida completo desde el entrenamiento hasta el despliegue.
+
 
 \section{Trabajos relacionados}
 
-Meter referencias a artículos y blogs:
+El presente trabajo busca un punto de partida de cara a contar repeticiones de distintos movimientos en un evento de CrossFit. Algún trabajo relacionado con esta temática se pueden encontrar por ejemplo en 
+\cite{FitnessMovementTypes}, donde hacen uso de \textit{Yolo 4} (ver 
+\cite{Yolo4}) y \href{https://mediapipe.dev/}{\textit{Mediapipe}} para detectar y clasificar distintos movimientos de fitness, o en \cite{ClassifyFunctionalFitness}, donde se hace uso de sensores portátiles para clasificar movimientos a lo largo de un \textit{workout}\footnote{Se entiende en este contexto por \textit{workout} el conjunto de movimientos funcionales tanto de fuerza como cardiovasculares.}. 
 
-Ejemplo tenis:
+Fuera de la literatura, un artículo hace uso de \textit{MoViNets}.
+En concreto: \href{https://blog.ml6.eu/sports-video-analysis-in-the-real-world-realtime-tennis-action-recognition-using-movinet-stream-813200aa589f}{\textit{tennis-action-recognition}} hace uso de \textit{MoViNet stream} para clasificar movimientos en un evento de tenis\footnote{Si bien el trabajo presentado en este blog encaja en gran medida con lo que se busca con este trabajo, no ha sido replicar los resultados, ni ha sido posible encontrar referencias del autor.}.
 
-https://blog.ml6.eu/sports-video-analysis-in-the-real-world-realtime-tennis-action-recognition-using-movinet-stream-813200aa589f
+En este otro \href{https://towardsdatascience.com/how-i-created-the-workout-movement-counting-app-using-deep-learning-and-optical-flow-89f9d2e087ac}{artículo de \textit{towardsdatascience}} el autor hace uso de \href{https://docs.opencv.org/3.4/d4/dee/tutorial_optical_flow.html}{\textit{Optical Flow}} y posterior clasificación utilizando una red neuronal propia, para contar repeticiones de movimientos que parece ofrecer buenos resultados.
 
-Medium ejemplo de contar repeticiones:
+Finalmente se ha decidido hacer uso de una versión de \textit{MoViNets base} como modelo para la clasificación de movimientos, ya que ofrece un buen punto de partida para clasificar acciones (en este caso ejercicios de funcionales o de CrossFit), y debido a que el modelo tiene un tamaño adecuado para ser desplegado sin hacer un uso intensivo de recursos (permite hacer inferencia sin necesidad de utilizar GPU para los casos estudiados), lo que permite hacer uso del mismo por medio de una aplicación por un usuario sin conocimiento técnico.
 
-https://towardsdatascience.com/how-i-created-the-workout-movement-counting-app-using-deep-learning-and-optical-flow-89f9d2e087ac
-
-texto
