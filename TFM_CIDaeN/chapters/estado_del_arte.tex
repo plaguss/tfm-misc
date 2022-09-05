@@ -17,10 +17,9 @@ En cuanto a las arquitecturas de \textit{MoViNets stream}, si bien a la hora de 
 
 \section{Cloud}
 
-De que hablo aquí¿
+A la hora de desplegar una aplicación que hace uso de machine learning (ML), los proveedores cloud ofrecen servicios que automatizan una gran parte del ciclo de vida del modelo, tanto en AWS (con \href{https://aws.amazon.com/sagemaker/?nc1=h_ls}{\textit{Amazon SageMaker}}), Azure: (\href{https://azure.microsoft.com/es-es/services/machine-learning/#product-overview}{\textit{Azure ML}}) o Google (con \href{https://cloud.google.com/datalab/docs}{\textit{Google Datalab}}) por ejemplo.
 
-Si pensamos en servir un modelo de ML/AI, en la nube \href{https://aws.amazon.com/sagemaker/?nc1=h_ls}{\textit{Amazon SageMaker}} ofrece el ciclo de vida completo desde el entrenamiento hasta el despliegue.
-
+En este trabajo se ha optado por desplegar el modelo en AWS, partiendo de cero, componiendo los servicios base que ofrece AWS para servir la aplicación por medio de \href{https://aws.amazon.com/ec2/?nc1=h_ls}{EC2}, y obtener las predicciones del modelo haciendo llamadas a una función \href{https://aws.amazon.com/lambda/?nc1=h_ls}{función lambda} respaldada por un contenedor de docker en \href{https://aws.amazon.com/ecr/?nc1=h_ls}{ECR}.
 
 \section{Trabajos relacionados}
 

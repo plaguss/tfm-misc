@@ -19,23 +19,21 @@ Los atletas grabaron la realización de los eventos, que eran enviados a \textit
 
 \subsection{Proceso de extracción}
 
-SEGUIR AQUÍ CON LOS VIDEOS
+Para seleccionar la muestra de videos, se ha partido de 4 \textit{eventos}, que se pueden encontrar en el siguiente Los videos corresponden a los siguientes eventos, que se pueden encontrar \href{https://games.crossfit.com/workouts/games/2020}{enlace}: \textit{Friendly Fran}, \textit{Damn Diane}, \textit{Nasty Nancy} y \textit{Awful Annie}. Estos eventos dan pie a 9 movimientos, las \textit{labels} de nuestro modelo, que se pueden encontrar en el siguiente \href{https://gist.github.com/plaguss/58091caefee6acb39ae51cbc241b3cf9/raw/labels.txt}{\textit{gist}}.
 
-Todos los videos descargados pertenecen a la primera etapa de los \href{https://en.wikipedia.org/wiki/2020_CrossFit_Games}{Crossfit Games de 2020}). Este año fue algo atípico debido a la pandemia: La final de la competición se distinguió en dos etapas, una primera en formato online, y la final a la que solo pudieron acceder 10 atletas en total (5 hombres y 5 mujeres). Los videos correspondientes a la primera etapa están todos subidos a YouTube, dentro de las \href{https://www.youtube.com/c/CrossFitGamesTV/playlists}{listas de CrossFit Games}, donde todos los atletas están grabados de forma individual y con la cámara estática, lo que reduce enormemente el ruido de los datos.
+Dentro de la siguiente lista de videos (\href{https://www.youtube.com/c/CrossFitGamesTV/playlists}{listas de CrossFit Games}), se pueden encontrar los videos pertenecientes a la primera etapa, donde todos los atletas están grabados de forma individual y con la cámara estática. Todos estos videos tienen en común que la cámara está fija y aunque a veces aparecen personas alrededor (se puede ver a una persona haciendo de juez en todos ellos, o en otros casos también a más gente entrenando al fondo de la imágen), el atleta en cuestión es la parte principal del vídeo.
 
-Para seleccionar la muestra de videos, se ha partido de 4 \textit{eventos} \footnote{Los videos corresponden a los siguientes eventos, que se pueden encontrar \href{https://games.crossfit.com/workouts/games/2020}{aquí}: \textit{Friendly Fran}, \textit{Damn Diane}, \textit{Nasty Nancy} y \textit{Awful Annie}.} que en total dan pie a 9 movimientos (ver las etiquetas en el siguiente \href{https://gist.github.com/plaguss/58091caefee6acb39ae51cbc241b3cf9/raw/labels.txt}{\textit{gist}}).
+De cada \textit{evento} se han seleccionado 20 videos (10 de hombres y 10 de mujeres), de los cuales se han etiquetado 15 repeticiones de cada ejercicio. Esto nos deja con una muestra de alrededor de 300 repeticiones por movimiento, 2700 clips en total. Comparemos este dataset con con UCF101 (ver \cite{UCF101}), el utilizado por los autores para hacer fine tuning en el tutorial. UCF101 contiene ejemplos de 101 actividades, con 131 muestras por actividad en media frente a 300.
 
-De cada \textit{evento} se han seleccionado 20 videos (10 de hombres y 10 de mujeres), de los cuales se han etiquetado 15 repeticiones de cada movimiento presente. Esto nos deja con una muestra de alrededor de 300 repeticiones por movimiento, 2700 clips.
+Los videos se han descargado por medio del siguiente script: \href{https://github.com/plaguss/tfm-misc/blob/main/scripts/download.py}{\texttt{download.py}}, que utiliza \href{https://github.com/yt-dlp/yt-dlp}{\texttt{yt-dlp}}. Todos los vídeos se han descargado con resolución 480 x 854p, en formato mp4.
 
-Para descargar los videos se ha utilizado \href{https://github.com/yt-dlp/yt-dlp}{\texttt{yt-dlp}}, todos con la misma resolución (480 x 854p) en formato mp4. El siguiente script: \href{https://github.com/plaguss/tfm-misc/blob/main/scripts/download.py}{\texttt{download.py}}, se ha utilizado para las descargas de todos los videos.
+Una vez tenemos los videos, el siguiente paso para generar el dataset consiste en obtener los clips pertenecientes a cada movimiento con la etiqueta correspondiente. Para ello, la herramienta elegida ha sido \href{https://supervise.ly/}{\textit{Supervisely}}\footnote{Entre las distintas herramientas gratuitas, otra alternativa es \href{https://labelstud.io/}{\textit{LabelStudio}}. Sin embargo, \textit{Supervisely} facilita mucho el trabajo al permitir seleccionar rangos de frames por medio de atajos del teclado.}.
 
-El etiquetado de los videos se ha hecho con \href{https://supervise.ly/}{\textit{Supervisely}} \footnote{Tras probar otras alternativas como \href{https://labelstud.io/}{\textit{LabelStudio}}, \textit{Supervisely} facilita enormemente seleccionar rangos de frames por medio de atajos del teclado.}.
-Una vez se ha etiquetado un video, \textit{Supervisely} genera un \texttt{json} con las anotaciones correspondientes al movimiento y los frames en los que se produce.
+Una vez se ha etiquetado un video, \textit{Supervisely} genera un \texttt{json} con las anotaciones correspondientes al movimiento y los frames en los que se produce. Este fichero hay que transformarlo a un formato que pueda utilizar \texttt{ffmpeg-split.py}, para lo cuál se ha utilizado el siguiente script: \href{https://github.com/plaguss/tfm-misc/blob/main/scripts/manifester.py}{\texttt{manifester.py}}.
 
-Para obtener cada uno de los clips se ha utilizado \href{https://github.com/plaguss/tfm-misc/blob/main/scripts/ffmpeg-split.py}{\texttt{ffmpeg-split.py}} \footnote{Este script pertenece al siguiente \href{https://github.com/c0decracker/video-splitter}{repositorio}.}. Las anotaciones se tranforman a un formato que \texttt{ffmpeg-split.py} pueda utilizar por medio de \href{https://github.com/plaguss/tfm-misc/blob/main/scripts/manifester.py}{\texttt{manifester.py}}.
+Por último, para obtener cada uno de los clips se ha utilizado \href{https://github.com/plaguss/tfm-misc/blob/main/scripts/ffmpeg-split.py}{\texttt{ffmpeg-split.py}}\footnote{Este script pertenece al siguiente \href{https://github.com/c0decracker/video-splitter}{repositorio}.}. Como su nombre indica, este script utiliza \texttt{ffmpeg} para hacer particiones de los videos. Utilizando la información del \textit{manifest}, la generación del nombre de cada uno de los videos tiene la siguiente estructura: \textit{<movement>\_<i>.mp4}, donde \textit{<movement>} es el nombre del movimiento en ese video, e \textit{<i>} es un contador del ejemplo en cuestión.
 
 La figura \ref{data_extraction_process} resume el proceso para la obtención de los datos\footnote{Todos los scripts utilizados para la la extracción de los datos se encuentran \href{https://github.com/plaguss/tfm-misc/tree/main/scripts}{aquí}.}.
-
 
 \begin{figure}[H]
     \centering
@@ -43,40 +41,42 @@ La figura \ref{data_extraction_process} resume el proceso para la obtención de 
 \caption{Proceso de extración de datos}\label{data_extraction_process}
 \end{figure}
 
+Se descargan los videos utilizando \texttt{download.py}, y se procesan en \textit{Supervisely}. El output de \textit{Supervisely}, se transforma por medio de \texttt{manifester.py}, cuyo output se utiliza a su vez por \texttt{ffmpeg-split.py}, junto con los videos originales, para obtener los clips etiquetados, que se almacenan en un bucket de S3.
+
 \subsection{Datos obtenidos}
 
-Meter tablas resumen de frames y segundos de los vídeos.
+En la tabla \ref{table_descriptive_stats} podemos ver los estadísticos descriptivos (media y desviación típica) del número de frames de todos los videos y duración, desglosado por movimiento.
+
 \input{tables/descriptive_stats}
 
+Podemos observar que el movimiento más rápido (aquél con menor duración) es el \textit{double-under}, con $14.5580$ frames en media, y algo menos de medio segundo de duración ($0.4841$ segundos, mientras que el movimiento de mayor duración en media es el \textit{power clean}, con $67.36$ frames y $2.44$ segundos de media. Habría que tener en cuenta, que si bien los \textit{double-unders} son muy similares, el \textit{power clean} podría bajar de tiempo si se tomase una muestra de eventos diferente. Esto es así debido a que en el evento escogido el peso con el que se realiza el movimiento es relativamente alto para este levantamiento.
 
-METER REFERENCIA A DATASET DEL PAPER: \cite{UCF101} Y EXPLICAR.
-
-HABLAR DE ESTO:
-Las distintas versiones de MoViNets están entrenadas sobre \href{https://www.deepmind.com/open-source/kinetics}{Kinetics 600}, por lo que para reentrenar el modelo necesitamos \textit{clips} (videos) que representen los movimientos que se quieren predecir.
+Si comparamos con \href{https://www.crcv.ucf.edu/data/UCF101.php}{UCF101} por ejemplo, la longitud de los videos es menor en este dataset (en UCF101 la duración de los videos está alrededor de $7$ segundos, mientras que en \href{https://www.deepmind.com/open-source/kinetics}{Kinetics 600} está alrededor de $10$ segundos).
 
 
 \section{Experimentación con deep learning}\label{deep_learning}
 
 \subsection{Introducción}
 
-En esta sección se explica el modelo seleccionado, el tratamiento aplicado a los datos, el entrenamiento del modelo y los resultados obtenidos.
+En esta sección se explica el modelo seleccionado y el tratamiento aplicado a los datos, el proceso de entrenamiento del modelo y los resultados obtenidos.
 
-Existe más de una implementación de los modelos de MoViNets como se puede ver en \href{https://paperswithcode.com/paper/movinets-mobile-video-networks-for-efficient}{\textit{Papers with code}}, pero dado que los autores del \textit{paper} original han desarrollado el mismo utilizando \texttt{tensorflow}, y el repositorio está expuesto de manera pública junto con todos los datos entrenados, se ha decidido utilizar la versión que se puede ver en el \href{repositorio oficial}{https://github.com/tensorflow/models/tree/master/official/projects/movinet} de \textit{MoViNets}.
+Se ha decidido utilizar la implementación de \textit{MoViNets} basada en  \texttt{tensorflow}. Aunque existe más de una implementación del modelo actualmente (ver \href{https://paperswithcode.com/paper/movinets-mobile-video-networks-for-efficient}{\textit{Papers with code}}), los autores han decidido utilizar este framework para el desarrollo del modelo, y han publicado el modelo junto con \textit{checkpoints} del mismo en el siguiente \href{https://github.com/tensorflow/models/tree/master/official/projects/movinet}{repositorio de GitHub}, así como en \href{https://tfhub.dev/google/collections/movinet/1}{\textit{tensorflow hub}}.
 
 \subsection{Preprocesado de los datos}
 
-De cara a construir la pipeline para el entrenamiento del modelo, se ha utilizado la API de \href{https://www.tensorflow.org/api_docs/python/tf/data/Dataset}{\texttt{tf.data.Dataset}} ya que permite la ingesta de un conjunto potencialmente grande de datos, así como el procesamiento de los mismos.
+De cara a construir la pipeline para el entrenamiento del modelo, se ha utilizado la API de \href{https://www.tensorflow.org/api_docs/python/tf/data/Dataset}{\texttt{tf.data.Dataset}} ya que permite la ingesta de un conjunto potencialmente grande de datos, así como el procesamiento de los mismos de forma eficiente (ver \href{https://www.tensorflow.org/guide/data_performance}{\textit{Better performance with the tf.data API}}) de leer los videos como un \texttt{Dataset}.
 
-La forma más eficiente (BUSCAR REFERENCIA) de leer los videos en el \texttt{Dataset} es escribirlos como \href{https://www.tensorflow.org/api_docs/python/tf/data/TFRecordDataset}{\texttt{tf.data.TFRecordDataset}}, 
-\texttt{tf.data.TFRecordDataset}
-(REVISAR PARA QUE SALGA LA REFERENCIA)
-para lo cuál se deben transformar los videos en formato mp4 a \texttt{tfrecords}. (INSERTAR REFERENCIA A movinets\_helper/writer.py, Y LOS DISTINTOS EJEMPLOS)
+El primer paso para consiste generar un nuevo dataset, reemplazando los videos en formato .mp4 a .tfrecords (ver \href{https://www.tensorflow.org/tutorials/load_data/tfrecord}{\textit{TFRecord and tf.train.Example}}), un formato para guardar una secuencia de ficheros en binario, basado en \href{https://developers.google.com/protocol-buffers/}{protocol-buffers} de Google específico para \texttt{Tensorflow}.
 
-Al introducir los videos, se cambia el tamaño para igualarlo al utilizado en el entrenamiento original, 224x224p, y se escalan los valores para que se encuentren en el rango $[0, 1]$.
+Para simplificar todo el proceso desde la lectura de los datos hasta el entrenamiento del modelo y posterior consumo del mismo (inferencia), se ha desarrollado una pequeña librería, disponible en PyPI: \href{https://pypi.org/project/movinets_helper/}{\texttt{movinets\_helper}}\footnote{Aunque aún está pendiente de documentar por completo y añadir los tests correspondientes, pero todo el entrenamiento y tratamiento de datos se ha hecho por medio de este paquete.}. El paso a paso en el preprocesamiento de los datos se puede ver en el siguiente \href{https://plaguss.github.io/movinets_helper/how-to-guides/#how-to-create-a-dataset}{enlace}.
 
-Para homogeneizar los datos de entrada se ha decidido fijar al número de frames para todos los videos a 10 ($\bar{f}=10$)(BUSCAR REFERENCIA A LOS DATOS UTILIZADOS EN EL PAPER ORIGINAL). Debido a que los vídeos en este conjunto de datos son más cortos que los utilizados en el caso de \textit{Kinetics 600}, se ha seleccionado el número de frames como $\bar{f} = \min_v f_{v}$, donde $f_v$ es el número de frames del vídeo $v$. El menor número de frames corresponde a uno de los vídeos de \textit{double-unders}. Para aquellos vídeos con un número de frames mayor que $\bar{f}$, se seleccionan $\bar{f}$ frames equiespaciados.
+Un punto relevante al transformar el formato de los datos es el tamaño. Los dataset en formato \href{https://www.tensorflow.org/api_docs/python/tf/data/TFRecordDataset}{\texttt{tf.data.TFRecordDataset}} no son eficientes en cuanto al espacio que ocupan, se pierde la ventaja de la compresión que ofrecen los formatos mp4 en video, o jpg en imágenes por ejemplo. El dataset pasa de ocupar alrededor de 400Mb en la resolución original, a ocupar algo menos de 10Gb una vez almacenados como TFRecords. Esto ocurre a pesar de comprimir los ficheros por medio de gzip, almacenar solo 10 frames de cada vídeo y almacenando la resolución necesaria para entrenar la versión a2 base de \textit{MoViNets}.
 
-En la siguiente imagen podemos ver el ejemplo de uno de los \textit{clips} que entran en la muestra de entrenamiento. Se trata de un \textit{power clean}, donde se pueden ver las distintas imágenes que componen el \textit{clip}.
+A la hora de leer el dataset (siguiendo la \href{https://plaguss.github.io/movinets_helper/how-to-guides/#how-to-ingest-a-dataset}{guía}), todos los videos se reescalan de acuerdo al modelo seleccionado (224x224p para el caso de a2 base), y se escalan los valores en RGB para que se encuentren en el rango $[0, 1]$.
+
+Para homogeneizar los datos de entrada se ha decidido fijar al número de frames para todos los videos a 10 ($\bar{f}=10$)\footnote{Ver en el paper original el tratamiento del \textit{frame rate}. Aunque en el paper original utilizan 50 frames para los videos (Kinetics 600 tiene videos de 10 segundos, a una tasa de 24fps), en este caso no es posible en movimientos como los \textit{double-unders} ya que son mucho más cortos.}. Debido a que los vídeos en este conjunto de datos son más cortos que los utilizados en el caso de \textit{Kinetics 600}, se ha seleccionado el número de frames como $\bar{f} = \min_v f_{v}$, donde $f_v$ es el número de frames del vídeo $v$. El menor número de frames corresponde a uno de los vídeos de \textit{double-unders}. Para aquellos vídeos con un número de frames mayor que $\bar{f}$, se seleccionan $\bar{f}$ frames equiespaciados.
+
+En la siguiente imagen \ref{frames} podemos ver el ejemplo de uno de los \textit{clips} que entran en la muestra de entrenamiento. Se trata de un \textit{power clean}, donde se pueden ver las distintas imágenes que componen el \textit{clip}.
 
 \begin{figure}[H]
     %\centering
@@ -84,9 +84,11 @@ En la siguiente imagen podemos ver el ejemplo de uno de los \textit{clips} que e
 \caption{Frames de una muestra de \textit{power clean} de la pipeline de entrenamiento}\label{frames}
 \end{figure}
 
+En el momento del entrenamiento, todos los videos están compuestos de 10 frames.
+
 \subsection{Experimentos realizados y resultados}
 
-El modelo se ha entrenado en \href{https://colab.research.google.com/?hl=es}{\textit{Google Colab}} con \textit{Tensorflow 2}. El modelo seleccionado ha sido MoViNets A2 Base\footnote{No ha sido posible hacer fine-tuning del modelo Stream debido a un error en los modelos guardados, ver \href{https://github.com/tensorflow/models/issues/10730}{issue 10730}.}, ya aunque sea necesario utilizar GPU para el fine-tuning, es el modelo más grande (y con mejor capacidad predictiva) que permite hacer inferencia con CPU en un tiempo razonable\footnote{En \href{https://blog.tensorflow.org/2022/04/video-classification-on-edge-devices.html}{este artículo} de \textit{Tensorflow} hacen referencia a aquellos modelos que pueden llegar a correr en tiempo real, lo que consideran como 20fps o superior.}.
+El modelo se ha entrenado en \href{https://colab.research.google.com/?hl=es}{\textit{Google Colab}} con \textit{Tensorflow 2}. Y la versión y arquitectura seleccionada ha sido MoViNets A2 Base\footnote{No ha sido posible hacer fine-tuning del modelo Stream debido a un error en los modelos que han guardado los autores, ver \href{https://github.com/tensorflow/models/issues/10730}{issue 10730}.}, ya aunque sea necesario utilizar GPU para el fine-tuning, es el modelo más grande (y con mejor capacidad predictiva) que permite hacer inferencia con CPU en un tiempo razonable\footnote{En \href{https://blog.tensorflow.org/2022/04/video-classification-on-edge-devices.html}{este artículo} de \textit{Tensorflow} hacen referencia a aquellos modelos que pueden llegar a correr en tiempo real, lo que consideran como 20fps o superior.}.
 
 Los hiperparámetros del modelo son los mismos utilizados en el paper original\footnote{Ver apartado \textit{B.1 More Details of the Architectures and Training} de METER BIBLIOGRAFÍA PARA EL PAPER}, con un tamaño de batch igual a 8\footnote{El tamaño del batch seleccionado es el mismo utilizado por los autores en el tutorial a modo de ejemplo sobre el dataset UCF101.}.
 
@@ -98,7 +100,7 @@ La muestra se divide en un $80\%$ (2164 clips) para training, y un $20\%$ (541 c
 \caption{Distribución de las etiquetas entre la muestra de entrenamiento y test}\label{sample_sizes}
 \end{figure}
 
-El modelo se ha entrenado por 10 epochs, evaluando top 1 y top 5 accuracy, obteniendo un accuracy de 0.9995 y 1 en entrenamiento y test respectivamente, como podemos observar en la siguiente imagen extraída de \textit{tensorboard.dev}:
+El modelo se ha entrenado por 10 \textit{epochs}, evaluando top 1 y top 5 accuracy, obteniendo un resultado de 0.9995 y 1 en entrenamiento y test respectivamente, como podemos observar en la siguiente imagen extraída de \textit{tensorboard.dev}:
 
 \begin{figure}[H]
     \centering
@@ -106,16 +108,16 @@ El modelo se ha entrenado por 10 epochs, evaluando top 1 y top 5 accuracy, obten
 \caption{Top 1 categorial accuracy por epoch y loss frente por número de iteraciones}\label{training}
 \end{figure}
 
-El modelo base generaliza a un gran número de movimientos, incluyendo algunos movimientos similares\footnote{Por ejemplo, entre las  \href{https://raw.githubusercontent.com/tensorflow/models/f8af2291cced43fc9f1d9b41ddbf772ae7b0d7d2/official/projects/movinet/files/kinetics_600_labels.txt}{labels de Kinetics 600} se encuentran \textit{squat}, \textit{clean and jerk} o \textit{snatch weight lifting}.} , lo que puede facilitar seguir aprendiendo algunos de movimientos similares.
+El modelo base generaliza a un gran número de movimientos, incluyendo algunos movimientos similares\footnote{Por ejemplo, entre las  \href{https://raw.githubusercontent.com/tensorflow/models/f8af2291cced43fc9f1d9b41ddbf772ae7b0d7d2/official/projects/movinet/files/kinetics_600_labels.txt}{\textit{labels} de Kinetics 600} se encuentran \textit{squat}, \textit{clean and jerk} o \textit{snatch weight lifting}.} , lo que puede facilitar el aprendizaje de algunos de movimientos similares.
 
 Por otro lado, los videos en este caso, aunque se han seleccionado de una muestra distinta de atletas, todos ellos son atletas de élite en su deporte, por lo que la ejecución de los movimientos son muy similares entre si, lo que facilita aprender a clasificar los mismos.
 
-Los resultados del entrenamiento se pueden ver en de forma interactiva en el siguiente enlace a \href{https://tensorboard.dev/experiment/UXyupsnMQ2S74vdul3vdbw/#scalars}{\textit{Tensorboard.dev}}.
+Los resultados del entrenamiento se pueden ver en de forma interactiva en el siguiente enlace a \href{https://tensorboard.dev/experiment/UXyupsnMQ2S74vdul3vdbw/#scalars}{\textit{Tensorboard.dev}}. En vista de estos resultados, no ha sido necesario modificar ninguno de los hiperparámetros propuestos por los autores del modelo.
 
 
 \subsection{Evaluación de los resultados}
 
-A la hora de evaluar los resultados, empezamos analizando el heatmap de la matriz de confusión. Como se vio al analizar el accuracy en la muestra de test, todos los movimientos se clasifican bien (ver imagen \ref{app_3}).
+A la hora de evaluar los resultados, empezamos analizando el heatmap de la matriz de confusión. Como se vio al analizar el accuracy en la muestra de test, todos los movimientos se clasifican bien (ver imagen \ref{training}).
 
 \begin{figure}[H]
     \centering
@@ -123,9 +125,9 @@ A la hora de evaluar los resultados, empezamos analizando el heatmap de la matri
 \caption{Heatmap de la matriz de confusión para la muestra de test.}\label{app_3}
 \end{figure}
 
-Con vistas a proporcionar un análisis más robusto en caso de extender el modelo a un mayor número de movimientos o muestras de distintos atletas, puede ser útil la información que proporciona el heatmap de la figura \ref{heatmap_correlations}. La construcción de este gráfico se hace de la siguiente forma:
+Con vistas a proporcionar un análisis más robusto, en caso de que se decidiera extender el modelo a un mayor número de movimientos o muestras de distintos atletas, puede ser útil la información que proporciona el heatmap de la figura \ref{heatmap_correlations}. La construcción de este gráfico se hace de la siguiente forma:
 
-Partiendo de las probabilidades asignadas a cada vídeo en el período de test, se fija para cada movimiento (cada \textit{label} correcta) y se calculan las correlaciones. Se selecciona la correlación (de Pearson) con el movimiento correctamente etiquetado, y se concatenan todos los vectores columna, de forma que obtenemos una matriz cuadrada. Estas correlaciones ayudan a ver cuáles son los movimientos que más se "confunden" entre si. Dado que las probabilidades deben sumar 1, aquellos movimientos con una correlación negativa más cercana a 1, son aquellos en los que se puede observar una mayor intercambio de probabilidades en la predicción.
+Partiendo de las probabilidades asignadas a cada vídeo en el período de test, se fija para cada movimiento (cada \textit{label} correcta) y se calculan las correlaciones. Se selecciona la correlación (de Pearson) con el movimiento correctamente etiquetado, y se concatenan todos los vectores columna, de forma que obtenemos una matriz cuadrada. Estas correlaciones ayudan a ver cuáles son los movimientos que más se "confunden" entre si. Dado que las probabilidades deben sumar 1, aquellos movimientos con una correlación negativa más cercana a 1, son aquellos en los que se puede observar una mayor intercambio de probabilidades a la predicción.
 
 \begin{figure}[H]
     \centering
@@ -144,17 +146,15 @@ Por último, se puede ver en la siguiente tabla las probabilidades medias y desv
 
 \subsection{Introducción}
 
-En el siguiente apartado se presenta la aplicación para clasificar movimientos de crossfit, la arquitectura elegida, así como su funcionamiento para un ejemplo en concreto.
+En el siguiente apartado se presenta la aplicación para clasificar movimientos de crossfit, la arquitectura elegida y su funcionamiento para un ejemplo en concreto.
 
-Para la explotación del modelo se ha elegido desplegar una aplicación en AWS desarrollada en Plotly Dash. Un usuario solo necesita subir un video en formato mp4, y recibir a cambio las predicciones del mismo. En los siguientes apartados se puede ver la arquitectura de la aplicación en la nube y los resultados obtenidos.
+Para la explotación del modelo se ha elegido desplegar una aplicación en AWS desarrollada en Plotly Dash. Un usuario de la misma solo necesita subir un video en formato mp4, y recibir a cambio las predicciones del mismo. En los siguientes apartados se puede ver la arquitectura de la aplicación en la nube y los resultados obtenidos.
 
 \subsection{Arquitectura cloud}
 
 A continuación se puede ver en la figura \ref{cloud_diagram} el diagrama de la aplicación desplegada en AWS.
 
-El punto de entrada para un usuario es la aplicación desplegada en \href{https://aws.amazon.com/es/ec2/}{\textit{EC2}}, cuyo código se puede ver en el repositorio \href{https://github.com/plaguss/movinets_dash_app}{\texttt{movinets\_dash\_app}}.
-
-La app está desarrollada en \href{https://plotly.com/dash/}{\textit{Dash}}, y ofrece la funcionalidad justa para subir un video en formato mp4 (y mostrarlo), obtener las probabilidades asociadas a cada movimiento, y mostrar ejemplos de los movimientos para los que se ha entrenado el modelo.
+El punto de entrada para un usuario es la aplicación desplegada en \href{https://aws.amazon.com/es/ec2/}{\textit{EC2}}, cuyo código se puede ver en el repositorio \href{https://github.com/plaguss/movinets_dash_app}{\texttt{movinets\_dash\_app}}. La app está desarrollada en \href{https://plotly.com/dash/}{\textit{Dash}}, y ofrece la funcionalidad para subir un video en formato mp4 (y reproducirlo), obtener las probabilidades asociadas a cada movimiento, y mostrar ejemplos de los movimientos para los que se ha entrenado el modelo.
 
 Se pueden distinguir dos bloques:
 %
@@ -162,10 +162,10 @@ Se pueden distinguir dos bloques:
 %
 \item \textit{App pipeline}.
 Por un lado tenemos la aplicación con la que interactúa el usuario.
-Se parte de un repositorio público en github que contiene el código del front end. Por medio de \href{https://aws.amazon.com/es/codepipeline/}{AWS CodePipeline} y \href{https://aws.amazon.com/es/codedeploy/}{AWS CodeDeploy} se automatiza el despliegue de la misma en una instancia de \textit{EC2}, que viene desencadenado por medio de un \texttt{git push} a la rama master del repositorio.
+Partiendo de un repositorio público en github que contiene el código del front end, por medio de \href{https://aws.amazon.com/es/codepipeline/}{AWS CodePipeline} y \href{https://aws.amazon.com/es/codedeploy/}{AWS CodeDeploy} se automatiza el despliegue de la misma en una instancia de \textit{EC2}, que viene desencadenado por medio de un \texttt{git push} a la rama master del repositorio.
 
 \item \textit{Model predictions}.
-Al subir un video, este se puede mandar a predecir (solo se reproduce en pantalla por defecto). El proceso en este caso contempla la interacción con el modelo por medio de una función \href{https://aws.amazon.com/es/lambda/}{\textit{AWS Lambda}}. Debido a las restricciones de tamaño de lambda, no es posible desplegar el código de la misma simplemente comprimiendo las dependencias ya que tensorflow por si solo excede el límite. El código de la lambda \href{https://github.com/plaguss/tfm-misc/tree/main/lambda_aws}{(ver aquí)} se debe empaquetar en Docker y subir la imagen a \href{https://aws.amazon.com/es/ecr/}{ECR}. La lambda se encarga por tanto de leer el video, cargar el modelo almacenado en S3, transformar el video al formato adecuado, y devolver las probabilidades asociadas al mismo.
+Al subir un video, este se puede enviar a predecir (solo se reproduce en pantalla por defecto). El proceso en este caso contempla la interacción con el modelo por medio de una función \href{https://aws.amazon.com/es/lambda/}{\textit{AWS Lambda}}. Debido a las restricciones de tamaño de lambda, no es posible desplegar el código de la misma simplemente comprimiendo las dependencias ya que tensorflow por si solo excede el límite. El código de la lambda \href{https://github.com/plaguss/tfm-misc/tree/main/lambda_aws}{(ver aquí)} se debe empaquetar en Docker y subir la imagen a \href{https://aws.amazon.com/es/ecr/}{ECR}. La lambda se encarga por tanto de leer el video, cargar el modelo almacenado en S3, transformar el video al formato adecuado, y devolver las probabilidades asociadas al mismo.
 
 \end{itemize}
 
@@ -188,7 +188,7 @@ A continuación se puede ver una serie de capturas de la app desplegada. La figu
 \caption{App: Estado inicial}\label{app_1}
 \end{figure}
 
-Una vez se ha subido un clip, este se reproduce de forma automática (figura \ref{app_2}). Para poder obtener las probabilidades asociadas al movimiento en cuestión habría que pulsar el botón \textit{Submit Video}, que envía el contenido a la función lambda.
+Una vez se ha subido un clip, este se reproduce de forma automática (imagen \ref{app_2}). Para poder obtener las probabilidades asociadas al movimiento en cuestión habría que pulsar el botón \textit{Submit Video}, que envía el contenido a la función lambda.
 
 \begin{figure}[H]
     \centering
