@@ -3,20 +3,20 @@
 
 \section{Motivación}
 
-En el presente trabajo se busca desarrollar un modelo que sea capaz de clasificar distintos movimientos de CrossFit. Dentro del este deporte, el proceso para clasificarse para una competición suele ser uno o varios \textit{workouts}\footnote{Se entiende por \textit{workout} a un conjunto de ejercicios variados con movimientos funcionales ejecutados a alta intensidad, ver \href{https://www.crossfit.com/what-is-crossfit}{aquí}.}, que debe ser grabado y enviado a la organización del evento en cuestión, para posibles revisiones del mismo.
+En el presente trabajo se busca desarrollar un modelo que sea capaz de clasificar distintos movimientos de CrossFit. En este deporte, el proceso para clasificarse para una competición suele ser uno o varios \textit{workouts}\footnote{Se entiende por \textit{workout} a un conjunto de ejercicios variados con movimientos funcionales ejecutados a alta intensidad, ver \href{https://www.crossfit.com/what-is-crossfit}{aquí}.}, que debe ser grabado y enviado a la organización del evento en cuestión, para posibles revisiones del mismo.
 
-Debido a que este deporte viene ganando popularidad con los años, han ido surgiendo más competiciones, y por lo tanto la necesidad de revisar estos videos de los atletas que se presentan. Esta tarea, la de revisar la correcta ejecución y el conteo de repeticiones de un atleta, conlleva la necesidad de un \textit{juez}, una persona encargada de revisar y contar las repeticiones en los eventos.
+Debido a que este deporte viene ganando popularidad con los años, han ido surgiendo más competiciones, y por lo tanto la necesidad de revisar los videos de los atletas que se presentan. Esta tarea, la revisión de la correcta ejecución y el conteo de repeticiones de un atleta, conlleva la necesidad de un \textit{juez}, una persona encargada de revisar y contar las repeticiones en los eventos.
 
-En el caso de los clasificatorios para las competiciones, esta tarea quizá podría ser automa-tizada, utilizando para ello una aplicación a la que poder subir videos, y que se encargue de hacer de juez, contando las repeticiones de los distintos movimientos.
+En el caso de los clasificatorios para las competiciones, esta tarea quizá podría ser automa-tizada, utilizando para ello una aplicación que haga las veces de juez.
 
 \section{Objetivos}
 
-Como punto de partida para solucionar el problema previo, se pretence ofrecer solución a una versión simplificada de este problema, una aplicación que permita clasificar entre distintos movimientos de CrossFit. Para ello, es necesario disponer de un conjunto de videos que representen los distintos ejercicios, un modelo que permita clasificar estos videos, así como una aplicación en la que un usuario pueda subir estos videos y obtener el movimiento del que se trata.
+Como punto de partida para solucionar el problema previo, se pretende ofrecer solución a una versión simplificada de este problema, una aplicación que permita clasificar entre distintos movimientos de CrossFit. Para ello, es necesario disponer de un conjunto de videos que representen los distintos ejercicios, un modelo que permita clasificar estos videos, así como una aplicación en la que un usuario pueda subir estos videos y obtener el movimiento del que se trata.
 
 \section{Estructura del proyecto}
 
 El trabajo se divide en las siguientes secciones. En la sección \ref{estado_del_arte} se expone el estado del arte actual, mostrando los modelos disponibles en la actualidad que tratan la clasificación de actividades humanas, la explotación de los mismos en el actual entorno \textit{cloud}, así como una breve revisión de trabajos relacionados.
 
-El desarrollo del proyecto contempla las siguientes secciones: La sección \ref{extracción_recolección} presenta la metodología para la extracción de datos y el análisis del conjunto de datos obtenido. A continuación, la sección \ref{deep_learning} trata el tratamiento de los datos necesario para entrenar el modelo, y los resultados obtenidos en el mismo. Por último, la sección \ref{despliegue} explica la arquitectura elegida para el despliegue de la aplicación y ejemplos de uso.
+El desarrollo del proyecto contempla las siguientes secciones: La sección \ref{extracción_recolección} presenta la metodología para la extracción de datos y el análisis del conjunto de datos obtenido. A continuación, la sección \ref{deep_learning} expone el tratamiento de los datos necesario para entrenar el modelo, y los resultados obtenidos en el mismo. Por último, la sección \ref{despliegue} explica la arquitectura elegida para el despliegue de la aplicación y ejemplos de uso.
 
-Finalmente, en la sección \ref{conclusiones} se resumen los resultados obtenidos y se proponen lineas de mejora.
+Finalmente, en la sección \ref{conclusiones} se resumen los resultados obtenidos y se proponen posibles lineas de mejora.

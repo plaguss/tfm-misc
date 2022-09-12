@@ -6,20 +6,20 @@
 
 En el siguiente apartado se expone la metodología de obtención de los datos de entrena-miento. Se presenta el proceso de extracción de los videos, el tratamiento para la generación del conjunto de clips, y el análisis de los datos obtenidos.
 
-No hay constancia de un dataset formado por clips de movimientos de CrossFit etiquetados o modelo que permita clasificar estos movimientos, por lo que el paso inicial en este trabajo consiste en obtener un conjunto de \textit{clips} que con los movimientos etiquetados.
+No hay constancia de un dataset formado por clips de movimientos de CrossFit etiqueta-dos o modelo que permita clasificar estos movimientos, por lo que el paso inicial en este trabajo consiste en obtener un conjunto de \textit{clips} que con los movimientos etiquetados.
 
-Una particularidad de este deporte, es que gran parte del contenido está disponible en \textit{YouTube}, por lo que es el primer punto al que acceder en busca de estos datos. Debido a que hay una gran diversidad de movimientos en CrossFit, y si en competiciones como los \textit{CrossFit Games} aparecen cada año uno o varios movimientos nuevos, se ha decidido seleccionar un subconjunto de los movimientos para crear este dataset.
+Una particularidad de este deporte, es que los atletas suben gran parte del contenido está a \textit{YouTube}, por lo que es el primer punto al que acceder en busca de estos datos. Debido a que hay una gran diversidad de movimientos en CrossFit, y si en competiciones como los \textit{CrossFit Games} aparecen cada año uno o varios movimientos nuevos, se ha decidido seleccionar un subconjunto de los movimientos para crear este dataset.
 
-Los CrossFit Games son una competición anual creada por \textit{Crossfit, LLC.} que busca descubrir a los atletas más en forma, y consisten en una serie de eventos (\textit{workouts}) basados en ejercicios metabólicos, halterofilia y gimnásticos. Los ganadores de los CrossFit Games obtienen el título de "Fittest on Earth" (ver la siguiente entrada de  \href{https://es.wikipedia.org/wiki/CrossFit_Games}{wikipedia}).
+Los CrossFit Games son una competición anual creada por \textit{Crossfit, LLC.} que busca descu-brir a los atletas más en forma, y consisten en una serie de eventos (\textit{workouts}) basados en ejercicios metabólicos, de halterofilia y gimnásticos. Los ganadores de los CrossFit Games obtienen el título de "Fittest on Earth" (ver la siguiente entrada de  \href{https://es.wikipedia.org/wiki/CrossFit_Games}{wikipedia}).
 
-En 2020, debido a la pandemia por COVID-19, esta competición se vió afectada, y 30 hombres y 30 mujeres fueron invitados a competir de forma online durante una primera etapa, pasando solo 5 y 5 a la final.
+En 2020, debido a la pandemia por COVID-19, esta competición se vió afectada, y 30 hombres y 30 mujeres fueron invitados a competir de forma online durante una primera etapa, pasando solo 5 y 5 a la final presencial.
 
-Los atletas grabaron la realización de los eventos, que eran enviados a \textit{CrossFit} para su corrección, y estos los han publicado en \textit{YouTube}.
+Los atletas grabaron la realización de los eventos, que eran enviados a \textit{CrossFit} para su corrección, quien los ha publicado en el canal propio de \textit{YouTube}.
 
 
 \subsection{Proceso de extracción}
 
-Para seleccionar la muestra de videos, se ha partido de 4 \textit{eventos}, que se pueden encontrar en el siguiente Los videos corresponden a los siguientes eventos, que se pueden encontrar \href{https://games.crossfit.com/workouts/games/2020}{enlace}: \textit{Friendly Fran}, \textit{Damn Diane}, \textit{Nasty Nancy} y \textit{Awful Annie}. Estos eventos dan pie a 9 movimientos, las \textit{labels} de nuestro modelo, que se pueden encontrar en el siguiente \href{https://gist.github.com/plaguss/58091caefee6acb39ae51cbc241b3cf9/raw/labels.txt}{\textit{gist}}.
+Para seleccionar la muestra de videos, se ha partido de 4 \textit{eventos}, que se pueden encontrar en el siguiente \href{https://games.crossfit.com/workouts/games/2020}{enlace}: \textit{Friendly Fran}, \textit{Damn Diane}, \textit{Nasty Nancy} y \textit{Awful Annie}. Estos eventos dan pie a 9 movimientos, las \textit{labels} de nuestro modelo, que se pueden encontrar en el siguiente \href{https://gist.github.com/plaguss/58091caefee6acb39ae51cbc241b3cf9/raw/labels.txt}{\textit{gist}}.
 
 Dentro de la siguiente lista de videos (\href{https://www.youtube.com/c/CrossFitGamesTV/playlists}{listas de CrossFit Games}), se pueden encontrar los videos pertenecientes a la primera etapa, donde todos los atletas están grabados de forma individual y con la cámara estática. Todos estos videos tienen en común que la cámara está fija y aunque a veces aparecen personas alrededor (se puede ver a una persona haciendo de juez en todos ellos, o en otros casos también a más gente entrenando al fondo de la imágen), el atleta en cuestión es la parte principal del vídeo.
 
@@ -105,7 +105,7 @@ El modelo se ha entrenado por 10 \textit{epochs}, evaluando top 1 y top 5 accura
 \begin{figure}[H]
     \centering
 		\includegraphics[width=\textwidth]{figs/tensorboard_training.png}
-\caption{Top 1 categorial accuracy por epoch y loss frente por número de iteraciones}\label{training}
+\caption{Top 1 categorial accuracy por epoch y loss por número de iteraciones}\label{training}
 \end{figure}
 
 El modelo base generaliza a un gran número de movimientos, incluyendo algunos movimientos similares\footnote{Por ejemplo, entre las  \href{https://raw.githubusercontent.com/tensorflow/models/f8af2291cced43fc9f1d9b41ddbf772ae7b0d7d2/official/projects/movinet/files/kinetics_600_labels.txt}{\textit{labels} de Kinetics 600} se encuentran \textit{squat}, \textit{clean and jerk} o \textit{snatch weight lifting}.} , lo que puede facilitar el aprendizaje de algunos de movimientos similares.
