@@ -8,8 +8,9 @@ The slides are generated using [marp](https://github.com/marp-team/marp/blob/mai
 
 ### How to create the pdf
 
+
 ```bash
-marp --pdf movinets_on_cf.md
+marp --html --allow-local-files --pdf slides.md
 ```
 
 #### Installation
