@@ -19,7 +19,7 @@ Los atletas grabaron la realización de los eventos, que eran enviados a \textit
 
 \subsection{Proceso de extracción}
 
-Para seleccionar la muestra de videos, se ha partido de 4 \textit{eventos}, que se pueden encontrar en el siguiente \href{https://games.crossfit.com/workouts/games/2020}{enlace}: \textit{Friendly Fran}, \textit{Damn Diane}, \textit{Nasty Nancy} y \textit{Awful Annie}. Estos eventos dan pie a 9 movimientos, las \textit{labels} de nuestro modelo, que se pueden encontrar en el siguiente \href{https://gist.github.com/plaguss/58091caefee6acb39ae51cbc241b3cf9/raw/labels.txt}{\textit{gist}}, o una demostración de los mismos en el siguiente \href{https://github.com/plaguss/tfm-misc}{repositorio}.
+Para seleccionar la muestra de videos, se ha partido de 4 \textit{eventos}, que se pueden encon-trar en el siguiente \href{https://games.crossfit.com/workouts/games/2020}{enlace}: \textit{Friendly Fran}, \textit{Damn Diane}, \textit{Nasty Nancy} y \textit{Awful Annie}. Estos eventos dan pie a 9 movimientos, las \textit{labels} de nuestro modelo, que se pueden encontrar en el siguiente \href{https://gist.github.com/plaguss/58091caefee6acb39ae51cbc241b3cf9/raw/labels.txt}{\textit{gist}}, o una demostración de los mismos en el siguiente \href{https://github.com/plaguss/tfm-misc}{repositorio}.
 
 Dentro de la siguiente lista de videos (\href{https://www.youtube.com/c/CrossFitGamesTV/playlists}{listas de CrossFit Games}), se pueden encontrar los videos pertenecientes a la primera etapa, donde todos los atletas están grabados de forma individual. Todos estos videos tienen en común que la cámara está fija y aunque a veces aparecen personas alrededor (se puede ver a una persona haciendo de juez en todos ellos, o en otros casos a más gente entrenando al fondo de la imágen), el atleta en cuestión es la parte principal del vídeo.
 
@@ -66,7 +66,7 @@ Se ha decidido utilizar la implementación de \textit{MoViNets} basada en  \text
 
 De cara a construir la pipeline para el entrenamiento del modelo, se ha utilizado la API de \href{https://www.tensorflow.org/api_docs/python/tf/data/Dataset}{\texttt{tf.data.Dataset}} ya que permite la ingesta de un conjunto potencialmente grande de datos, así como el procesamiento de los mismos de forma eficiente (ver \href{https://www.tensorflow.org/guide/data_performance}{\textit{Better performance with the tf.data API}}).
 
-El primer paso para generar el nuevo dataset para el entrenamiento, consiste en transformar los videos en formato .mp4 a .tfrecords (ver \href{https://www.tensorflow.org/tutorials/load_data/tfrecord}{\textit{TFRecord and tf.train.Example}}), un formato para guardar una secuencia de ficheros en binario, basado en \href{https://developers.google.com/protocol-buffers/}{protocol-buffers} de Google específico para \texttt{Tensorflow}.
+El primer paso para generar el nuevo dataset para el entrenamiento, consiste en trans-formar los videos en formato .mp4 a .tfrecords (ver \href{https://www.tensorflow.org/tutorials/load_data/tfrecord}{\textit{TFRecord and tf.train.Example}}), un forma-to para guardar una secuencia de ficheros en binario, basado en \href{https://developers.google.com/protocol-buffers/}{protocol-buffers} de Google específico para \texttt{Tensorflow}.
 
 Para simplificar todo el proceso desde la lectura de los datos hasta el entrenamiento del modelo y posterior consumo del mismo (inferencia), se ha desarrollado una pequeña librería, disponible en PyPI: \href{https://pypi.org/project/movinets_helper/}{\texttt{movinets\_helper}}\footnote{Aunque aún está pendiente de documentar por completo y añadir los tests correspondientes, todo el entrenamiento y tratamiento de datos se ha hecho por medio de esta librería.}. El paso a paso en el preprocesamiento de los datos se puede ver en el siguiente \href{https://plaguss.github.io/movinets_helper/how-to-guides/#how-to-create-a-dataset}{enlace}.
 
@@ -100,7 +100,7 @@ La muestra se divide en un $80\%$ (2164 clips) para training, y un $20\%$ (541 c
 \caption{Distribución de las etiquetas entre la muestra de entrenamiento y test}\label{sample_sizes}
 \end{figure}
 
-El modelo se ha entrenado durante 10 \textit{epochs}, evaluando top 1 y top 5 accuracy, obteniendo un resultado de 0.9995 y 1 en entrenamiento y test respectivamente en top 1, como podemos observar en la siguiente imagen extraída de \textit{tensorboard.dev}:
+El modelo se ha entrenado durante 10 \textit{epochs}, evaluando top 1 y top 5 accuracy, obtenien-do un resultado de 0.9995 y 1 en entrenamiento y test respectivamente en top 1, como podemos observar en la siguiente imagen extraída de \textit{tensorboard.dev}:
 
 \begin{figure}[H]
     \centering
@@ -108,11 +108,11 @@ El modelo se ha entrenado durante 10 \textit{epochs}, evaluando top 1 y top 5 ac
 \caption{Top 1 categorial accuracy por epoch y loss por número de iteraciones}\label{training}
 \end{figure}
 
-El modelo base generaliza a un gran número de movimientos, incluyendo algunos movimientos similares\footnote{Por ejemplo, entre las  \href{https://raw.githubusercontent.com/tensorflow/models/f8af2291cced43fc9f1d9b41ddbf772ae7b0d7d2/official/projects/movinet/files/kinetics_600_labels.txt}{\textit{labels} de Kinetics 600} se encuentran \textit{squat}, \textit{clean and jerk} o \textit{snatch weight lifting}.} , lo que puede facilitar el aprendizaje de algunos de movimientos similares como puede ser en este caso el power clean o el thruster.
+El modelo base generaliza a un gran número de movimientos, incluyendo algunos movi-mientos similares\footnote{Por ejemplo, entre las  \href{https://raw.githubusercontent.com/tensorflow/models/f8af2291cced43fc9f1d9b41ddbf772ae7b0d7d2/official/projects/movinet/files/kinetics_600_labels.txt}{\textit{labels} de Kinetics 600} se encuentran \textit{squat}, \textit{clean and jerk} o \textit{snatch weight lifting}.} , lo que puede facilitar el aprendizaje de algunos de movimientos simila-res como puede ser en este caso el power clean o el thruster.
 
 Por otro lado, los videos en este caso, aunque se han seleccionado de una muestra distinta de atletas, todos ellos son atletas de élite en su deporte, por lo que la ejecución de los movimientos son muy similares entre si, lo que facilita aprender a clasificar los mismos.
 
-Los resultados del entrenamiento se pueden ver de forma interactiva en el siguiente enlace a \href{https://tensorboard.dev/experiment/UXyupsnMQ2S74vdul3vdbw/#scalars}{\textit{Tensorboard.dev}}. En vista de estos resultados, no ha sido necesario modificar ninguno de los hiperparámetros propuestos por los autores del modelo.
+Los resultados del entrenamiento se pueden ver de forma interactiva en el siguiente enlace a \href{https://tensorboard.dev/experiment/UXyupsnMQ2S74vdul3vdbw/#scalars}{\textit{Tensorboard.dev}}. En vista de estos resultados, no ha sido necesario modificar nin-guno de los hiperparámetros propuestos por los autores del modelo.
 
 
 \subsection{Evaluación de los resultados}
@@ -217,7 +217,7 @@ El tiempo aproximado para obtener las predicciones asociadas a un clip es de alr
 
 Como alternativas para ganar velocidad, se podría reducir el tamaño del modelo para mejorar la latencia de la CPU, limitando el número de posiciones decimales por ejemplo, un procedimiento conocido como \href{https://www.tensorflow.org/lite/performance/post_training_quantization}{\textit{post-training quantization}}. Los autores originales ofrecen versiones del mismo ya entrenadas para este caso \href{https://tfhub.dev/google/collections/movinet/1}{aquí}.
 
-Existen otras alternativas. Se podría hacer un muestreo del vídeo de la misma forma que se hace durante la pipeline de entrenamiento (cabe recordar que durante el entrenamiento, el modelo solo utiliza 10 frames de cada vídeo), con lo que la información a procesar disminuiría. Otra opción sería entrenar un modelo de menor complejidad, ya sea la versión a0 o a1, ya que el accuracy actual ya es excepcionalmente alto.
+Existen otras alternativas. Se podría hacer un muestreo del vídeo de la misma forma que se hace durante la pipeline de entrenamiento (cabe recordar que durante el entrenamiento, el modelo solo utiliza 10 frames de cada vídeo), con lo que la información a procesar disminui-ría. Otra opción sería entrenar un modelo de menor complejidad, ya sea la versión a0 o a1, ya que el accuracy actual ya es excepcionalmente alto.
 
 
 
