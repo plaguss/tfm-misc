@@ -6,12 +6,12 @@ theme: default
 backgroundColor: #aed6f1 
 color:  #1a5276 
 math: katex
-_footer: hey
+_footer: 
 ---
 
 <style>section { justify-content: start; }</style>
 
-<!-- backgroundImage: "linear-gradient(135deg, #ffffff  0%, #aed6f1 100%)" -->
+<!-- backgroundImage: "linear-gradient(to right bottom, #ffffff  0%, #75C3F9 100%)" -->
 
 <!-- 
 _class: lead
@@ -50,18 +50,36 @@ img[alt~="center"] {
 header : 'Clasificación de movimientos de CrossFit: una aplicación con MoViNets.'
 -->
 
+<style scoped>
+h1{
+  text-align: center;
+  height:100%; 
+  width:100%;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px
+}
+</style>
+
+# 1 Introducción
+
+---
+
 # 1.1 Motivación
 
-Meter explicación de CrossFit (AQUÍ Y EN LA MEMORIA) y alguna imagen.
+- Deporte joven
+	- Creciente número de atletas, tanto profesionales como aficionados
+	- Gran número de competiciones
 
-- Es un deporte con un gran número de participantes, y el número de competiciones sigue creciendo.
+- Competiciones
+	- Clasificatorios online
+	- Requiere juzgar y contar movimientos
+	- Proceso de corrección de vídeos muy tedioso e inconsistente
 
-- Automatizando del proceso de corrección de videos:
-
-  - Las personas pueden dejar una tarea repetitiva (se ahorra en personal).  
-
-  - Se limitaría la inconsistencia entre distintos jueces en las correcciones.
-
+- **Automatización del proceso de corrección de vídeos**
+	- Reducción de costes
+	- Mayor imparcialidad y objetividad
 
 ---
 
@@ -650,16 +668,16 @@ div.twocols p.break {
 
 ## 3.3.3 Resultado y funcionamiento
 
-![center w:300 h:200](./assets/bar-facing_burpee_example_app.png)
-![center w:200 h:150](./assets/app_1.png)
+![center w:400 h:200](./assets/bar-facing_burpee_example_app.png)
+![center w:400 h:150](./assets/app_1.png)
 
 
 <p class="break"></p>
 
 <br><br><br><br>
 
-![center w:300 h:200](./assets/app_2.png)
-![center w:300 h:200](./assets/app_3.png)
+![center w:400 h:200](./assets/app_2.png)
+![center w:400 h:200](./assets/app_3.png)
 
 </div>
 
