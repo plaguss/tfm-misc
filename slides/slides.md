@@ -221,8 +221,8 @@ En este trabajo nos centramos en *MoViNet a2 base*, que es de entre los modelos 
 # 2.2 Cloud
 
 Todo el despliegue se ha realizado utilizando los distintos servicios
-de AWS, sin recurrir a servicios como **AWS SageMaker**, **Azure ML** 
-o **Google DataLab**, que ofrecen una solución completa al despliegue
+de AWS, sin recurrir a servicios como *AWS SageMaker*, *Azure ML* 
+o *Google DataLab*, que ofrecen una solución completa al despliegue
 de modelos basados en deep learning.
 
 ---
@@ -478,11 +478,11 @@ div.twocols p.break {
 
 - Transformamos los datos originales a un nuevo [TFRecordDataset](https://www.tensorflow.org/api_docs/python/tf/data/TFRecordDataset).
 
-- Se reescalan los videos a una resolución de $224*224p$ (arquitectura *a2 base*), reescalado RGB $[0, 1]$.
+- Se reescalan los videos a una resolución de $224 \times 224p$ (arquitectura *a2 base*), reescalado RGB $[0, 1]$.
 
-- Muestra de $10 frames$ equiespacidos de cada video.
+- Muestra de $10$ frames equiespaciados de cada video.
 
-- El dataset pasa de ~400Mb -> ~10Gb(gzip).
+- El dataset pasa de ~400Mb $\rightarrow$ ~10Gb (gzipped).
 
 <p class="break"></p>
 
